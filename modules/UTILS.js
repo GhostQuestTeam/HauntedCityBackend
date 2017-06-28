@@ -31,3 +31,7 @@ function UTILS_getBestPlayers(limit) {
     }
     return players;
 }
+
+function UTILS_getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

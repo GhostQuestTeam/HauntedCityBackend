@@ -7,6 +7,6 @@
 // ====================================================================================================
 require("UTILS");
 
-var players = UTILS_getBestPlayers(10);
+var players = UTILS_getBestPlayers(7);
 
 Spark.setScriptData("players", players);
