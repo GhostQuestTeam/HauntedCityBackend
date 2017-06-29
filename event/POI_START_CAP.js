@@ -10,7 +10,7 @@ var poiId = Spark.getData().POI_ID;
 var dbPOIs = Spark.runtimeCollection("dbPOIs");
 var dbPOIsOnCapture = Spark.runtimeCollection("POIsOnCapture");
 var playerId = Spark.getPlayer().getPlayerId();
-var secondsForGame = 5;
+var secondsForGame = 3000;
 
 
 var cursorToCheckOwner = dbPOIs.findOne({

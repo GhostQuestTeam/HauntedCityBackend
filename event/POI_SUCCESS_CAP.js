@@ -28,7 +28,7 @@ var prevOwnerPlayerId = dbPOIs.findOne({
 
 //not capture again
 if(playerId == prevOwnerPlayerId) {
-    Spark.setScriptData("_debug", "FAIL");
+    Spark.setScriptData("result", "FAIL");
     Spark.exit();
 }
 
@@ -43,12 +43,12 @@ if(cursorToCheckOnCapture !== null) {
         dbPOIsOnCapture.remove({"poid" : poiId});
     }
     else {
-        Spark.setScriptData("_debug", "FAIL");
+        Spark.setScriptData("result", "FAIL");
         Spark.exit();
     }
 }
 else {
-    Spark.setScriptData("_debug", "FAIL");
+    Spark.setScriptData("result", "FAIL");
     Spark.exit();
 }
 
@@ -91,9 +91,26 @@ dbPlayerPOIdata.update({
 
 //send message to everybody
 var msgData = {};
+msgData.type = "TYPE_POI_OWNER_CHANGE";
 msgData.poid = poiId;
-msgData.newOwner = playerId;
-msgData.prevOwner = prevOwnerPlayerId;
+msgData.newOwnerUoid = playerId;
+msgData.prevOwnerUoid = prevOwnerPlayerId;
+
+var newOwner = Spark.loadPlayer(playerId);
+var prevOwner = Spark.loadPlayer(prevOwnerPlayerId);
+if(newOwner !== null) {
+    msgData.newOwnerDisplayName = newOwner.getDisplayName();
+    msgData.newOwnerUserName = newOwner.getUserName();
+}
+if(prevOwner !== null) {
+    msgData.prevOwnerDisplayName = prevOwner.getDisplayName();
+    msgData.newOwnerUserName = prevOwner.getUserName();
+    msgData.hasPrevOwner = true;
+}
+else {
+    msgData.hasPrevOwner = false;
+}
+
 UTILS_sendMessageToAllPlayers(msgData, 100);
 
 
@@ -121,3 +138,4 @@ _debug.newOwner = newOwner;
 _debug.prevOwner = prevOwner;
 
 Spark.setScriptData("_debug", _debug);
+Spark.setScriptData("result", "OK");

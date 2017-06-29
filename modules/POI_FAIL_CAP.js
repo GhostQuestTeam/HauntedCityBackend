@@ -17,6 +17,7 @@ var ids = [];
 ids.push(uoid);
 
 var msgData = {};
+msgData.type = "TYPE_POI_FAIL_CAPTURE";
 msgData.poid = poid;
 msgData.uoid = uoid;
 msgData.captureResult = "TIMEOUT";
