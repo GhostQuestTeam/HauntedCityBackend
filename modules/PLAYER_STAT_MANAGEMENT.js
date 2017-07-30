@@ -52,7 +52,25 @@ var PlayerStats = {
         this.power = newPower;
         
         return true;
-
+    },
+    "tryBuy":function(price){
+        if(this.money >= price){
+            this.money -= price;
+            return true;
+        }
+        return false;
+    },
+    
+    "tryBuyWeapon": function(weaponID){
+        weapon = Spark.metaCollection("Weapons").findOne({"id":weaponID});
+        if(!weapon) return false;//not exist weapon with such id 
+        if(~this.allowableWeapons.indexOf(weaponID)) return false;//player already has whis weapon
+        var buySuccess = this.tryBuy(weapon.cost);
+        if(buySuccess){
+            stats.allowableWeapons.push(weaponID);
+            return true;
+        }
+        return false;//not enough money;
     }
 }
 
