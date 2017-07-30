@@ -33,6 +33,26 @@ var PlayerStats = {
             }
         } while (this.exp >= this.expToLevel);
         this.exp += exp;
+    },
+    "tryUpgradeStats":function(stats){
+        var totalPoints = stats.endurance + stats.survivability + stats.power;
+        if(this.upgradePoints < totalPoints) return false;
+        
+        var newEndurance = this.endurance + stats.endurance;
+        var newSurvivability = this.survivability + stats.survivability;
+        var newPower = this.power + stats.power;
+        
+        if((newEndurance > 30) || ( newSurvivability > 30) || (newPower > 30) ){
+            return false;
+        }
+        
+        this.upgradePoints -= totalPoints;
+        this.endurance = newEndurance;
+        this.survivability = newSurvivability;
+        this.power = newPower;
+        
+        return true;
+
     }
 }
 
