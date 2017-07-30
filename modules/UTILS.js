@@ -23,15 +23,7 @@ function UTILS_sendMessageToAllPlayers(data, expireH) {
     UTILS_sendMessageToPlayers(data, expireH, playerIDs);
 }
 
-function UTILS_getBestPlayers(limit) {
-    var cursor = Spark.runtimeCollection("playerPOIdata").find().sort({"numOfPOIs" : -1}).limit(limit);
-    var players = [];
-    while(cursor.hasNext()) {
-        players.push(cursor.next());
-    }
-    return players;
-}
-
 function UTILS_getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
