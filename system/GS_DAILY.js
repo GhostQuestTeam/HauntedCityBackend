@@ -18,8 +18,12 @@ function increaseMoneyOnPoints() {
         
         var new_money = current_money + income_level * 300;
         
-        copy.properties.current_money = new_money;
+        var max_money = income_level * 900;
+        if(new_money > max_money){
+            new_money = max_money;
+        }
         
+        copy.properties.current_money = new_money;
         dbPOIs.applyChanges(data, copy);
     }
     Spark.setScriptData("res", "OK");
