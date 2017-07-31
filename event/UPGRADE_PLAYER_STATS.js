@@ -12,3 +12,4 @@ var stats = getCurrentPlayerStats();
 var statsDelta = Spark.getData().STATS;
 stats.tryUpgradeStats(statsDelta);
 updateCurrentPlayerStats(stats);
+sendUpdatePlayerMessage();

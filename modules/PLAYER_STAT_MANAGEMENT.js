@@ -6,6 +6,8 @@
 //
 // ====================================================================================================
 
+require("UTILS");
+
 var PlayerStats = {
     "updateExpToLevel" : function(){
         var lvl = this.level;
@@ -112,4 +114,13 @@ function earnExp(exp){
     var stats = getCurrentPlayerStats();
     stats.earnExp(exp);
     updateCurrentPlayerStats(stats);
+    sendUpdatePlayerMessage();
+}
+
+function sendUpdatePlayerMessage(){
+    var stats = getCurrentPlayerStats();
+    var messageData = {};
+    messageData.type  = "PLAYER_STATS_UPDATE";
+    messageData.data = stats;
+    UTILS_sendMessageToPlayers(messageData , 480, [Spark.getPlayer().getPlayerId()]);
 }
