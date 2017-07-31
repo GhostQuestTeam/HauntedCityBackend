@@ -71,7 +71,17 @@ var PlayerStats = {
             return true;
         }
         return false;//not enough money;
+    },
+    
+    "chooseWeapons": function(weapons){
+        this.currentWeapons = [];
+        for(var i =0; i < weapons.length; i++){
+            if(~this.allowableWeapons.indexOf(weapons[i])){
+                this.currentWeapons.push(weapons[i]);
+            }
+        }
     }
+    
 }
 
 function getCurrentPlayerStats(){
