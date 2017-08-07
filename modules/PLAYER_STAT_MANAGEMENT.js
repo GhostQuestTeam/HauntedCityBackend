@@ -100,8 +100,7 @@ function updateCurrentPlayerStats(stats){
     var statement = {"$set":{}}
     for(var key in stats){
         if(stats.hasOwnProperty(key)){
-                    statement["$set"]["Stats." + key] = stats[key];
-
+            statement["$set"]["Stats." + key] = stats[key];
         }
     }
     
@@ -115,6 +114,28 @@ function earnExp(exp){
     stats.earnExp(exp);
     updateCurrentPlayerStats(stats);
     sendUpdatePlayerMessage();
+}
+
+function getDefaultPlayerStats(){
+    var result = {};
+    result.level =1;
+    result.exp = 0; 
+    result.upgradePoints = 5;
+    result.survivability = 5;
+    result.endurance = 5;
+    result.power = 5;
+    result.money = 10000;
+    result.currentWeapons = ["sphere", "air_bolt"];
+    result.allowableWeapons = ["sphere", "air_bolt"];
+    
+    return result;
+}
+
+function addNewPlayer(uoid){
+    Spark.runtimeCollection("playerData").insert({
+        "playerID" : uoid,
+        "Stats":getDefaultPlayerStats()
+    });
 }
 
 function sendUpdatePlayerMessage(){
