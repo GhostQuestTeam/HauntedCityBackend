@@ -10,8 +10,5 @@ require("POI_STAT_MANAGEMENT");
 
 var id = Spark.getData().POI_ID;
 var action = Spark.getData().ACTION;
-var poi = getPOI(id);
-//TODO Add check owner
-if(isAllowableAction(action)){
-    poi[action]();
-}
+
+performAction(action, id);

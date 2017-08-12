@@ -7,8 +7,22 @@
 // ====================================================================================================
 
 require("PLAYER_STAT_MANAGEMENT");
+var DAILY_INCOME = 30;
 
 var POIActions = {
+    
+    "attackShield": function(){
+        if(this.current_shields > 0 && getCurrentPlayerStats().tryBuy(150)){
+            this.current_shields -= 300;
+            if(this.current_shields < 0){
+                this.current_shields = 0;
+            }
+            updatePOI(this);
+        }    
+    }
+}
+
+var POI_OwnerActions = {
     "takeMoney": function(){
          getCurrentPlayerStats().accrueMoney(this.current_money);
          this.current_money = 0;
@@ -23,16 +37,7 @@ var POIActions = {
             updatePOI(this);
         }    
     },
-    "attackShield": function(){
-        if(this.current_shields > 0 && getCurrentPlayerStats().tryBuy(150)){
-            this.current_shields -= 300;
-            if(this.current_shields < 0){
-                this.current_shields = 0;
-            }
-            updatePOI(this);
-        }    
-    },
-    "upgradeShield": function(){
+      "upgradeShield": function(){
         if(this.shields_level < 5 && getCurrentPlayerStats().tryBuy(this.shieldUpgradePrice())){
             this.shields_level++;
             updatePOI(this);
@@ -45,6 +50,7 @@ var POIActions = {
         }
     }
 }
+POI_OwnerActions.__proto__ = POIActions;
 
 var PointOfInterest = {
     "maxShield":function(){
@@ -56,15 +62,29 @@ var PointOfInterest = {
     "incomeUpgradePrice":function(){
         return 500 * this.income_level;
     },
-    
-    
+    "isOwn":function(){
+        return this.uoid == Spark.getPlayer().getPlayerId();
+    }
 };
-PointOfInterest.__proto__ = POIActions;
-function isAllowableAction(action){
-    return POIActions.hasOwnProperty(action);
+PointOfInterest.__proto__ = POI_OwnerActions;
+
+
+function performAction(action, POI_ID){
+    if(!isAllowableAction(action)) return;
+    var POI = getPOI(POI_ID);
+    if(needCheckOwner() && !POI.isOwn()) return;
+    POI[action]();
 }
 
-function maxMoney(POI){
+function needCheckOwner(){
+    return POI_OwnerActions.hasOwnProperty(action);
+}
+
+function isAllowableAction(action){
+    return POIActions.hasOwnProperty(action) || POI_OwnerActions.hasOwnProperty(action);
+}
+
+function maxMoneyPOI(POI){
     return 3 * 30 * POI.incom_level;
 }
 
