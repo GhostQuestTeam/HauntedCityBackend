@@ -106,5 +106,6 @@ function updatePOI( poiData){
             statement["$set"]["properties." + key] = poiData[key];
         }
     }
+    delete statement["$set"].id;
     Spark.runtimeCollection("dbPOIs").update(query, statement);
 }
