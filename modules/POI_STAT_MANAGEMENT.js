@@ -64,6 +64,10 @@ function isAllowableAction(action){
     return POIActions.hasOwnProperty(action);
 }
 
+function maxMoney(POI){
+    return 3 * 30 * POI.incom_level;
+}
+
 function getPOI(id){
     var poi = Spark.runtimeCollection("dbPOIs").findOne(
         {"_id":{$oid:id}}     

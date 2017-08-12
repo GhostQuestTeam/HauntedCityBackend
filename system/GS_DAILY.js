@@ -5,6 +5,8 @@
 // For details of the GameSparks Cloud Code API see https://docs.gamesparks.com/
 //
 // ====================================================================================================
+
+require("POI_STAT_MANAGEMENT");
 function increaseMoneyOnPoints() {
     var dbPOIs = Spark.runtimeCollection("dbPOIs");
     var cursor = dbPOIs.find();
@@ -16,9 +18,9 @@ function increaseMoneyOnPoints() {
         var income_level = data.properties.income_level;
         var current_money = data.properties.current_money;
         
-        var new_money = current_money + income_level * 300;
+        var new_money = current_money + income_level * DAILY_INCOME;
         
-        var max_money = income_level * 900;
+        var max_money = maxMoneyPOI(data.properties);
         if(new_money > max_money){
             new_money = max_money;
         }

@@ -55,7 +55,6 @@ var PlayerStats = {
         this.power = newPower;
 
         updateCurrentPlayerStats(this);        
-        
         return true;
     },
     "tryBuy":function(price){
@@ -70,7 +69,6 @@ var PlayerStats = {
         this.money += amount;
         updateCurrentPlayerStats(this);
     },
-    
     "tryBuyWeapon": function(weaponID){
         weapon = Spark.metaCollection("Weapons").findOne({"id":weaponID});
         if(!weapon) return false;//not exist weapon with such id 
