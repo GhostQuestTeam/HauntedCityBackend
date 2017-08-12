@@ -6,6 +6,8 @@
 //
 // ====================================================================================================
 
+require("PLAYER_STAT_MANAGEMENT");
+
 var data = Spark.getData();
 var uoid = Spark.getData().userId;
 var displayName = Spark.getData().displayName;
@@ -19,4 +21,5 @@ if(isNew) // only save if it is a new player
         "numOfPOIs" : 0,
         "POIs" : []
     })
+    addNewPlayer(uoid);
 }
