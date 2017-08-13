@@ -12,4 +12,3 @@ var stats = getCurrentPlayerStats();
 var weapons = Spark.getData().WEAPONS;
 stats.chooseWeapons(weapons);
 updateCurrentPlayerStats(stats);
-sendUpdatePlayerMessage();

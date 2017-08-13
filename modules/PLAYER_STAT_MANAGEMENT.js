@@ -115,6 +115,7 @@ function updateCurrentPlayerStats(stats){
     Spark.runtimeCollection("playerData").update(
         {"playerID": Spark.getPlayer().getPlayerId()}, statement
     );
+    sendUpdatePlayerMessage();
 }
 
 function earnExp(exp){

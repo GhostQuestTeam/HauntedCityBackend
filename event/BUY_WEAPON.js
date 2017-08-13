@@ -13,4 +13,3 @@ var stats = getCurrentPlayerStats();
 var weaponID = Spark.getData().WeaponID;
 stats.tryBuyWeapon(weaponID);
 updateCurrentPlayerStats(stats);
-sendUpdatePlayerMessage();
