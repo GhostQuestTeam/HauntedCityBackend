@@ -5,10 +5,10 @@
 // For details of the GameSparks Cloud Code API see https://docs.gamesparks.com/
 //
 // ====================================================================================================
-var strLatLon = Spark.getData().POS;
-var LatLonJSON = JSON.parse(strLatLon)
-var lat = LatLonJSON.lat;
-var lon = LatLonJSON.lon;
+var LatLon = Spark.getData().POS;
+//var LatLonJSON = JSON.parse(strLatLon)
+var lat = LatLon.lat;
+var lon = LatLon.lon;
 var deltaNearBy = 0.2;
 var maxDistance = 25 * 100;
 var lim = 10;
@@ -45,7 +45,7 @@ while(cursor.hasNext()) {
     nearPOIs.push(point);
 }
 
-Spark.setScriptData("base_point", LatLonJSON);
+Spark.setScriptData("base_point", LatLon);
 Spark.setScriptData("points", nearPOIs);
 
 /*var nearPOIs = [];
