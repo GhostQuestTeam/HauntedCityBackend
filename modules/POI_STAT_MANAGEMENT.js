@@ -108,4 +108,14 @@ function updatePOI( poiData){
     }
     delete statement["$set"].id;
     Spark.runtimeCollection("dbPOIs").update(query, statement);
+    sendUpdatePOIMessage(poiData.id)
+}
+
+function sendUpdatePOIMessage(POI_ID){
+    var messageData = {};
+    messageData.type  = "POI_UPDATE";
+    messageData.data =  Spark.runtimeCollection("dbPOIs").findOne(
+        {"_id":{$oid:POI_ID}}     
+    );
+    UTILS_sendMessageToAllPlayers(messageData , 480);
 }
