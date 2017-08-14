@@ -10,6 +10,11 @@ function UTILS_getAllPlayerIDs() {
     return cursor;
 }
 
+function UTILS_getOnlinePlayerIDs() {
+    var cursor = Spark.runtimeCollection("playersOnline").distinct("playerID");
+    return cursor;
+}
+
 function UTILS_sendMessageToPlayers(data, expireH, playerIDs) {
     var message = Spark.message(null);
     message.setPlayerIds(playerIDs);
@@ -20,6 +25,11 @@ function UTILS_sendMessageToPlayers(data, expireH, playerIDs) {
 
 function UTILS_sendMessageToAllPlayers(data, expireH) {
     var playerIDs = UTILS_getAllPlayerIDs();
+    UTILS_sendMessageToPlayers(data, expireH, playerIDs);
+}
+
+function UTILS_sendMessageToOnlinePlayers(data, expireH) {
+    var playerIDs = UTILS_getOnlinePlayerIDs();
     UTILS_sendMessageToPlayers(data, expireH, playerIDs);
 }
 

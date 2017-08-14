@@ -117,5 +117,5 @@ function sendUpdatePOIMessage(POI_ID){
     messageData.data =  Spark.runtimeCollection("dbPOIs").findOne(
         {"_id":{$oid:POI_ID}}     
     );
-    UTILS_sendMessageToAllPlayers(messageData , 480);
+    UTILS_sendMessageToOnlinePlayers(messageData , 1);
 }
