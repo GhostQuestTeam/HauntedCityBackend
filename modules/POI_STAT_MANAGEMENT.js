@@ -108,7 +108,7 @@ function updatePOI( poiData){
     }
     delete statement["$set"].id;
     Spark.runtimeCollection("dbPOIs").update(query, statement);
-    sendUpdatePOIMessage(poiData.id)
+    sendUpdatePOIMessage(poiData.id);
 }
 
 function sendUpdatePOIMessage(POI_ID){
@@ -117,5 +117,7 @@ function sendUpdatePOIMessage(POI_ID){
     messageData.data =  Spark.runtimeCollection("dbPOIs").findOne(
         {"_id":{$oid:POI_ID}}     
     );
+    var pointOwner = Spark.loadPlayer( messageData.data.properties.uoid);
+    messageData.data.properties.owner_display_name =  pointOwner.getDisplayName();
     UTILS_sendMessageToOnlinePlayers(messageData , 1);
 }
