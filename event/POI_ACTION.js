@@ -10,5 +10,5 @@ require("POI_STAT_MANAGEMENT");
 
 var id = Spark.getData().POI_ID;
 var action = Spark.getData().ACTION;
-
-performAction(action, id);
+var params = Spark.getData().PARAMS;
+performAction(id, action, params);

@@ -48,6 +48,15 @@ var POI_OwnerActions = {
             this.income_level++;    
             updatePOI(this);
         }
+    },
+    "spawnGhost": function(params){
+        var id = params.ghostID;
+        var price = Spark.metaCollection("Ghosts").findOne({"id":id}).price;
+        if(getCurrentPlayerStats().tryBuy(price)){
+            this.ghosts_num[id] = (this.ghosts_num[id] || 0) + 1;
+            updatePOI(this);
+        }
+        
     }
 }
 POI_OwnerActions.__proto__ = POIActions;
@@ -69,11 +78,11 @@ var PointOfInterest = {
 PointOfInterest.__proto__ = POI_OwnerActions;
 
 
-function performAction(action, POI_ID){
+function performAction(POI_ID, action, params){
     if(!isAllowableAction(action)) return;
     var POI = getPOI(POI_ID);
     if(needCheckOwner() && !POI.isOwn()) return;
-    POI[action]();
+    POI[action](params);
 }
 
 function needCheckOwner(){
