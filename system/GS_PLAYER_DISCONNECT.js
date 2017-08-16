@@ -6,7 +6,12 @@
 //
 // ====================================================================================================
 
+var playerID = Spark.getPlayer().getPlayerId();
 
 Spark.runtimeCollection("playersOnline").remove(
-     {"playerID": Spark.getPlayer().getPlayerId()}
+     {"playerID": playerID }
+);
+
+Spark.runtimeCollection("POIsOnCapture").remove(
+    {"uoid":playerID}
 );
