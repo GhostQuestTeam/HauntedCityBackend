@@ -85,6 +85,12 @@ function performAction(POI_ID, action, params){
     POI[action](params);
 }
 
+function getPlayerPOIs(){
+    var playerPOIdata = Spark.runtimeCollection("playerPOIdata");
+    var poi_IDs = playerPOIdata.findOne({"uoid":Spark.getPlayer().getPlayerId()}).POIs;
+    return poi_IDs.map(function(id){return  getPOI(id)});
+}
+
 function needCheckOwner(){
     return POI_OwnerActions.hasOwnProperty(action);
 }
