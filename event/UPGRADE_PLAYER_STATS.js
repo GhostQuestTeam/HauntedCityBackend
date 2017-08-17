@@ -11,4 +11,4 @@ require("PLAYER_STAT_MANAGEMENT");
 var stats = getCurrentPlayerStats();
 var statsDelta = Spark.getData().STATS;
 stats.tryUpgradeStats(statsDelta);
-updateCurrentPlayerStats(stats);
+//updateCurrentPlayerStats(stats);

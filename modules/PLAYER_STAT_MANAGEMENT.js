@@ -38,6 +38,11 @@ var PlayerStats = {
         updateCurrentPlayerStats(this);
     },
     "tryUpgradeStats":function(stats){
+        
+        stats.endurance = stats.endurance || 0;
+        stats.survivability = stats.survivability || 0;
+        stats.power = stats.power || 0;
+        
         var totalPoints = stats.endurance + stats.survivability + stats.power;
         if(this.upgradePoints < totalPoints) return false;
         

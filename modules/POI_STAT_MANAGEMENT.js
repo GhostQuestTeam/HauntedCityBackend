@@ -88,7 +88,7 @@ function performAction(POI_ID, action, params){
 function getPlayerPOIs(){
     var playerPOIdata = Spark.runtimeCollection("playerPOIdata");
     var poi_IDs = playerPOIdata.findOne({"uoid":Spark.getPlayer().getPlayerId()}).POIs;
-    return poi_IDs.map(function(id){return  getPOI(id)});
+    return poi_IDs.map(function(id){return  getExtendedPOI(id)});
 }
 
 function needCheckOwner(){
@@ -110,6 +110,12 @@ function getPOI(id){
     poi.id = id;
     poi.__proto__ = PointOfInterest;
     return poi;
+}
+
+function getExtendedPOI(id){
+    return Spark.runtimeCollection("dbPOIs").findOne(
+        {"_id":{$oid:id}}     
+    );
 }
 
 //TODO Extract statement generating to separate function
