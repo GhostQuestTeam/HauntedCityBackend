@@ -70,6 +70,18 @@ var PlayerStats = {
         }
         return false;
     },
+    "resurrectPlayer":function(){
+        if(this.tryBuy(700)){
+            this.lives = 3;
+            updateCurrentPlayerStats(this);
+        }
+    },
+    "die":function(){
+        if(this.lives){
+            this.lives--;
+            updateCurrentPlayerStats(this);
+        }
+    },
     "accrueMoney" : function(amount){
         this.money += amount;
         updateCurrentPlayerStats(this);
@@ -138,7 +150,8 @@ function getDefaultPlayerStats(){
     result.survivability = 5;
     result.endurance = 5;
     result.power = 5;
-    result.money = 10000;
+    result.money = 1000;
+    result.lives = 3;
     result.currentWeapons = ["sphere", "air_bolt"];
     result.allowableWeapons = ["sphere", "air_bolt"];
     

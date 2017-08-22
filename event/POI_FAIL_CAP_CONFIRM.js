@@ -6,6 +6,7 @@
 //
 // ====================================================================================================
 require("UTILS");
+require("PLAYER_STAT_MANAGEMENT");
 
 var poiId = Spark.getData().POI_ID;
 var dbPOIs = Spark.runtimeCollection("dbPOIs");
@@ -24,6 +25,7 @@ if(cursorToCheckOnCapture !== null) {
         dbPOIsOnCapture.remove({"poid" : poiId});
         Spark.getScheduler().cancel("POI_FAIL_CAP");
         Spark.setScriptData("result", "OK");
+        getCurrentPlayerStats().die();
         Spark.exit();
     }
     else {

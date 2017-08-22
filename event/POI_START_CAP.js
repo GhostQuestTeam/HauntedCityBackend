@@ -6,6 +6,8 @@
 //
 // ====================================================================================================
 
+require("POI_STAT_MANAGEMENT");
+
 var poiId = Spark.getData().POI_ID;
 var dbPOIs = Spark.runtimeCollection("dbPOIs");
 var dbPOIsOnCapture = Spark.runtimeCollection("POIsOnCapture");
@@ -37,12 +39,18 @@ var check3 = cursorToCheckOnCapture === null;
 var isOK = check1 && check2 && check3;
 
 if(isOK) {
-    dbPOIsOnCapture.insert({
-        "uoid" : playerId,
-        "poid" : poiId
-    });
+    var POI = getPOI(poiId);
+    if(!POI.hasGuards()){
+        POI.capture()
+    }
+    else{
+        dbPOIsOnCapture.insert({
+            "uoid" : playerId,
+            "poid" : poiId
+        });
+        Spark.getScheduler().inSeconds("POI_FAIL_CAP", secondsForGame, { "uoid" : playerId, "poid" : poiId });
+    }
     Spark.setScriptData("started", "OK");
-    Spark.getScheduler().inSeconds("POI_FAIL_CAP", secondsForGame, { "uoid" : playerId, "poid" : poiId });
     Spark.getLog().debug("Start capture: poid - " + poiId + " uoid - " + playerId);
 }
 else {

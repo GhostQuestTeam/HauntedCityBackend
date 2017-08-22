@@ -6,6 +6,7 @@
 //
 // ====================================================================================================
 require("UTILS");
+require("POI_STAT_MANAGEMENT");
 
 var poiId = Spark.getData().POI_ID;
 var dbPOIs = Spark.runtimeCollection("dbPOIs");
@@ -52,66 +53,67 @@ else {
     Spark.exit();
 }
 
+getPOI(poiId).capture();
 
-//update poi info in the points metadata db
-dbPOIs.update(
-    {
-    "_id":
-        {
-        "$oid" : poiId
-        }
-    }, 
-    {
-        "$set" : 
-        {
-            "properties.uoid" : playerId
-        }
-    },
-    false, 
-    false);
+// //update poi info in the points metadata db
+// dbPOIs.update(
+//     {
+//     "_id":
+//         {
+//         "$oid" : poiId
+//         }
+//     }, 
+//     {
+//         "$set" : 
+//         {
+//             "properties.uoid" : playerId
+//         }
+//     },
+//     false, 
+//     false);
     
-//add point to the new owner in the players points metadata db
-dbPlayerPOIdata.update({
-    "uoid" : playerId
-}, 
-{
-    "$addToSet" : { "POIs" : poiId },
-    "$inc" : {"numOfPOIs" : 1}
-});
+// //add point to the new owner in the players points metadata db
+// dbPlayerPOIdata.update({
+//     "uoid" : playerId
+// }, 
+// {
+//     "$addToSet" : { "POIs" : poiId },
+//     "$inc" : {"numOfPOIs" : 1}
+// });
 
-//remove point from prev owner
-dbPlayerPOIdata.update({
-    "uoid" : prevOwnerPlayerId
-}, 
-{
-    "$pull" : { "POIs" : poiId },
-    "$inc" : {"numOfPOIs" : -1}
-});
+// //remove point from prev owner
+// dbPlayerPOIdata.update({
+//     "uoid" : prevOwnerPlayerId
+// }, 
+// {
+//     "$pull" : { "POIs" : poiId },
+//     "$inc" : {"numOfPOIs" : -1}
+// });
 
 
 //send message to everybody
-var msgData = {};
-msgData.type = "TYPE_POI_OWNER_CHANGE";
-msgData.poid = poiId;
-msgData.newOwnerUoid = playerId;
-msgData.prevOwnerUoid = prevOwnerPlayerId;
+// var msgData = {};
+// msgData.type = "TYPE_POI_OWNER_CHANGE";
+// msgData.poid = poiId;
+// msgData.newOwnerUoid = playerId;
+// msgData.prevOwnerUoid = prevOwnerPlayerId;
 
-var newOwner = Spark.loadPlayer(playerId);
-var prevOwner = Spark.loadPlayer(prevOwnerPlayerId);
-if(newOwner !== null) {
-    msgData.newOwnerDisplayName = newOwner.getDisplayName();
-    msgData.newOwnerUserName = newOwner.getUserName();
-}
-if(prevOwner !== null) {
-    msgData.prevOwnerDisplayName = prevOwner.getDisplayName();
-    msgData.newOwnerUserName = prevOwner.getUserName();
-    msgData.hasPrevOwner = true;
-}
-else {
-    msgData.hasPrevOwner = false;
-}
+// var newOwner = Spark.loadPlayer(playerId);
+// var prevOwner = Spark.loadPlayer(prevOwnerPlayerId);
+// if(newOwner !== null) {
+//     msgData.newOwnerDisplayName = newOwner.getDisplayName();
+//     msgData.newOwnerUserName = newOwner.getUserName();
+// }
+// if(prevOwner !== null) {
+//     msgData.prevOwnerDisplayName = prevOwner.getDisplayName();
+//     msgData.newOwnerUserName = prevOwner.getUserName();
+//     msgData.hasPrevOwner = true;
+// }
+// else {
+//     msgData.hasPrevOwner = false;
+// }
 
-UTILS_sendMessageToAllPlayers(msgData, 100);
+// UTILS_sendMessageToAllPlayers(msgData, 100);
 
 
 

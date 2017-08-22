@@ -19,6 +19,26 @@ var POIActions = {
             }
             updatePOI(this);
         }    
+    },
+    
+    "applyBattleResult": function(params){
+        var killedGhosts = params.GHOSTS;
+        var totalXP = 0;
+        for(ghost in killedGhosts){
+            if(killedGhosts.hasOwnProperty(ghost)){
+                var count = killedGhosts[ghost]; 
+                if(count < 0) return;
+                if(!this.ghosts_num[ghost] && (count > 0)) return;
+                if(this.ghosts_num[ghost] && count > this.ghosts_num[ghost]) return;
+                this.ghosts_num[ghost] -= count;
+                var xp = Spark.metaCollection("Ghosts").findOne({"id":ghost}).xp;
+                totalXP += count * xp;
+            }
+        }
+        
+        getCurrentPlayerStats().earnExp(totalXP);
+        updatePOI(this);
+    
     }
 }
 
@@ -56,7 +76,6 @@ var POI_OwnerActions = {
             this.ghosts_num[id] = (this.ghosts_num[id] || 0) + 1;
             updatePOI(this);
         }
-        
     }
 }
 POI_OwnerActions.__proto__ = POIActions;
@@ -71,8 +90,40 @@ var PointOfInterest = {
     "incomeUpgradePrice":function(){
         return 500 * this.income_level;
     },
+    "capture":function(){
+        var prevOwnerPlayerId = this.uoid;
+        this.uoid = Spark.getPlayer().getPlayerId();
+        
+        var dbPlayerPOIdata = Spark.runtimeCollection("playerPOIdata");
+        dbPlayerPOIdata.update({
+            "uoid" : this.uoid
+        }, 
+        {
+            "$addToSet" : { "POIs" : this.id },
+            "$inc" : {"numOfPOIs" : 1}
+        });
+
+        //remove point from prev owner
+        dbPlayerPOIdata.update({
+            "uoid" : prevOwnerPlayerId
+        }, 
+        {
+           "$pull" : { "POIs" : this.id },
+            "$inc" : {"numOfPOIs" : -1}
+        });
+
+        updatePOI(this);
+    },
     "isOwn":function(){
         return this.uoid == Spark.getPlayer().getPlayerId();
+    },
+    "hasGuards":function(){
+         for(ghost in this.ghosts_num){
+            if(this.ghosts_num.hasOwnProperty(ghost)){
+               if(this.ghosts_num[ghost]) return true;
+            }
+        }
+        return false;
     }
 };
 PointOfInterest.__proto__ = POI_OwnerActions;
@@ -139,6 +190,9 @@ function sendUpdatePOIMessage(POI_ID){
         {"_id":{$oid:POI_ID}}     
     );
     var pointOwner = Spark.loadPlayer( messageData.data.properties.uoid);
-    messageData.data.properties.owner_display_name =  pointOwner.getDisplayName();
+    messageData.data.properties.owner_display_name = "";
+    if(pointOwner){
+        messageData.data.properties.owner_display_name =  pointOwner.getDisplayName();
+    }
     UTILS_sendMessageToOnlinePlayers(messageData , 1);
 }

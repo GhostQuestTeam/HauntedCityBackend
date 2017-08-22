@@ -56,5 +56,18 @@ function increaseMoneyOnPoints() {
     Spark.setScriptData("res", "OK");
 }
 
-increaseMoneyOnPoints();
+// increaseMoneyOnPoints();
+function playersUpdate(){
+    var playerData = Spark.runtimeCollection("playerData");
+    var cursor = playerData.find();
+    
+    while(cursor.hasNext()) {
+        var data = cursor.next();
+        //var copy = JSON.parse(JSON.stringify(data));
+        
+        //copy.Stats.lives = 3;
+        playerData.update({"_id":{"$oid":data["_id"]["$oid"]}}, {"$set":{"Stats.lives":3}});
+    }
+}
 
+ playersUpdate();
